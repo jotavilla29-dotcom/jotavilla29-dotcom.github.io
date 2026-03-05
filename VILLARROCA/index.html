@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>VILLARROCA GLOBAL TRADE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="img/favicon.jpg.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+    body{ background:#f4f7fb; color:#222; line-height: 1.6; overflow-x: hidden; }
+
+    /* NAVEGACIÓN */
+    nav {
+      background: white; display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 5%; box-shadow: 0 2px 10px rgba(0,0,0,.1); position: sticky; top: 0; z-index: 1000; transition: .4s;
+    }
+    nav.scrolled { background: #0b3c6d; }
+    nav.scrolled a, nav.scrolled #navLogo { color: white !important; }
+    nav.scrolled .menu-toggle span { background: white; }
+
+    .nav-links { display: flex; gap: 25px; }
+    .nav-links a { color: #0b3c6d; text-decoration: none; font-weight: 600; transition: .3s; }
+    .nav-links a:hover { color: #ff8c00; }
+
+    .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; z-index: 1100; }
+    .menu-toggle span { width: 25px; height: 3px; background: #0b3c6d; border-radius: 2px; }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: flex; }
+      .nav-links {
+        position: fixed; right: 0; top: 0; background: white; width: 70%; height: 100vh;
+        flex-direction: column; align-items: center; padding-top: 80px; transform: translateX(100%); transition: 0.5s;
+        box-shadow: -10px 0 20px rgba(0,0,0,0.1);
+      }
+      .nav-links.active { transform: translateX(0%); }
+      nav.scrolled .nav-links { background: #0b3c6d; }
+    }
+
+    /* HERO */
+    .hero{
+      min-height:90vh; display:flex; align-items:center; justify-content:center; text-align:center; color:white;
+      background:linear-gradient(rgba(11,60,109,.8),rgba(13,110,253,.8)), url('img/fondo.jpg') center/cover no-repeat;
+      padding: 20px;
+    }
+    .hero-content img{ width:280px; margin-bottom:25px; }
+    .hero h1{ font-size: 2.5rem; margin-bottom:15px; }
+
+    section{ padding:80px 20px; max-width:1100px; margin:auto; }
+    h2{ color:#0b3c6d; margin-bottom:10px; font-size:2rem; text-align: center; }
+    .subtitle-section { text-align: center; color: #666; margin-bottom: 35px; font-size: 1rem; }
+
+    .btn, .btn-contacto{
+      background:linear-gradient(135deg,#ff8c00,#ffb347); color:white;
+      padding:14px 30px; border:none; border-radius:40px; cursor:pointer;
+      font-size:16px; text-decoration: none; display: inline-block; transition:.3s; box-shadow:0 5px 15px rgba(0,0,0,.2);
+    }
+
+    /* TIENDA */
+    .tienda-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:15px; }
+    @media (min-width: 769px) {
+      .tienda-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+    }
+
+    .producto-card{
+      background: white; padding: 15px; border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.05); transition: .3s; text-align: center; cursor: pointer;
+    }
+    .producto-card:hover{ transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,.15); }
+    .producto-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 12px; }
+    @media (min-width: 769px) { .producto-card img { height: 200px; } }
+    
+    .producto-card h3 { font-size: 0.85rem; margin-top: 10px; color: #0b3c6d; }
+    .precio-tag { display: block; color: #ff8c00; font-weight: bold; font-size: 0.95rem; margin-top: 5px; }
+
+    /* MODAL */
+    .modal {
+      display: none; position: fixed; z-index: 3000; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 10px;
+    }
+
+    .modal-content {
+      background: white; width: 95%; max-width: 850px; border-radius: 20px; 
+      display: flex; flex-direction: row; position: relative; overflow: hidden; 
+      animation: zoomIn 0.3s ease; max-height: 90vh; 
+    }
+
+    .close-modal {
+      position: absolute; top: 15px; right: 15px; width: 35px; height: 35px;
+      background: white; color: #333; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 20px; font-weight: bold;
+      cursor: pointer; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      border: 1px solid #eee; transition: 0.3s;
+    }
+    .close-modal:hover { background: #ff8c00; color: white; }
+
+    @media (max-width: 768px) {
+      .modal-content { flex-direction: column; overflow-y: auto; }
+      .modal-left, .modal-right { width: 100%; flex: none; }
+      .modal-right { padding: 20px; text-align: center; }
+      .modal-left { padding-top: 45px; }
+    }
+
+    .modal-left { flex: 1; background: #f9f9f9; display: flex; align-items: center; justify-content: center; padding: 10px; }
+    .modal-left img { width: 100%; max-height: 350px; object-fit: contain; }
+    .modal-right { flex: 1; padding: 40px; }
+
+    /* SEDES */
+    .sedes-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:30px; }
+    .sede-card{ position:relative; border-radius:18px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,.15); }
+    .sede-card img{ width:100%; height:250px; object-fit:cover; }
+    .sede-info{ position:absolute; bottom:0; width:100%; background:linear-gradient(to top,rgba(0,0,0,.9),transparent); color:white; padding:20px; }
+    .cobertura{ margin-top:40px; padding:20px; background:#0b3c6d; color:white; border-radius:12px; text-align: center; font-weight:600; }
+
+    .whatsapp-float{ position:fixed; bottom:25px; right:25px; background:#25D366; color:white; width:60px; height:60px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:28px; text-decoration:none; z-index:2000; animation: pulse 2s infinite; }
+    @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(37,211,102,0.7);} 70%{box-shadow:0 0 0 15px rgba(37,211,102,0);} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0);} }
+    .reveal { opacity: 0; transform: translateY(40px); transition: 0.8s ease; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div style="font-weight: bold; color:#0b3c6d;" id="navLogo">VILLARROCA</div>
+  <div class="menu-toggle" id="mobile-menu"><span></span><span></span><span></span></div>
+  <div class="nav-links">
+    <a href="#inicio">Inicio</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#tienda">Tienda</a>
+    <a href="#galeria">Galería</a>
+    <a href="#sedes">Sedes</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="hero-content">
+    <img src="img/logo.png" alt="Logo">
+    <h1>Impulsamos tu Comercio Internacional</h1>
+    <p>Importaciones seguras, eficientes y con respaldo profesional.</p>
+    <br>
+    <a href="#contacto" class="btn">Solicitar Cotización</a>
+  </div>
+</header>
+
+<section class="reveal">
+  <h2>Bienvenidos a Villaroca Global Trade</h2>
+  <p style="text-align: center;">Somos una empresa especializada en comercio internacional, dedicada a brindar soluciones integrales en importación, gestión aduanera y logística internacional. Nuestro compromiso es ofrecer procesos seguros, eficientes y adaptados a las necesidades de cada cliente.</p>
+</section>
+
+<section id="nosotros" class="reveal">
+  <h2>Nosotros</h2>
+  <p>En <strong>Villaroca Global Trade</strong> trabajamos con profesionalismo, responsabilidad y transparencia para facilitar el acceso de nuestros clientes al mercado internacional.</p>
+  <br>
+  <p>Contamos con experiencia en procesos de importación, asesoría comercial y coordinación logística, asegurando que cada operación se realice conforme a la normativa vigente y con los más altos estándares de calidad.</p>
+</section>
+
+<section id="servicios" class="reveal">
+  <h2>Servicios</h2>
+  <div class="servicios-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px;">
+    <div style="background: white; padding: 20px; border-radius: 18px; box-shadow: 0 5px 20px rgba(0,0,0,.05); text-align: center;">
+      <i class="fa-solid fa-box" style="font-size: 40px; color: #ff8c00; margin-bottom: 15px;"></i>
+      <h3>Importación de Mercancías</h3>
+      <p>Gestión completa de compras internacionales desde diferentes países, asegurando calidad y costos competitivos.</p>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 18px; box-shadow: 0 5px 20px rgba(0,0,0,.05); text-align: center;">
+      <i class="fa-solid fa-file-contract" style="font-size: 40px; color: #ff8c00; margin-bottom: 15px;"></i>
+      <h3>Gestión Aduanera</h3>
+      <p>Trámites aduaneros y documentación conforme a la normativa vigente para una importación segura.</p>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 18px; box-shadow: 0 5px 20px rgba(0,0,0,.05); text-align: center;">
+      <i class="fa-solid fa-ship" style="font-size: 40px; color: #ff8c00; margin-bottom: 15px;"></i>
+      <h3>Logística Internacional</h3>
+      <p>Coordinación de transporte marítimo, aéreo y terrestre con entregas eficientes.</p>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 18px; box-shadow: 0 5px 20px rgba(0,0,0,.05); text-align: center;">
+      <i class="fa-solid fa-handshake" style="font-size: 40px; color: #ff8c00; margin-bottom: 15px;"></i>
+      <h3>Asesoría en Comercio Exterior</h3>
+      <p>Acompañamiento profesional para empresas y emprendedores que desean importar con seguridad.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tienda" class="reveal">
+  <h2>Nuestra Tienda</h2>
+  <div class="tienda-grid" id="contenedor-tienda"></div>
+</section>
+
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <div class="modal-left"><img id="modalImg" src="" alt=""></div>
+    <div class="modal-right">
+      <h2 id="modalTitle">Nombre</h2>
+      <p id="modalDesc">Descripción larga</p>
+      <div id="modalPrice" class="precio-tag" style="font-size: 1.8rem; margin: 15px 0;">Precio</div>
+      <a id="modalWaBtn" href="#" target="_blank" class="btn" style="background:#25D366; width:100%; text-align:center;">Comprar por WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<section id="galeria" class="reveal">
+  <h2>Galería</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px;">
+    <img src="img/foto1.jpg.jpeg" style="width:100%; height: 250px; object-fit: cover; border-radius:18px;">
+    <img src="img/foto2.jpg.jpeg" style="width:100%; height: 250px; object-fit: cover; border-radius:18px;">
+    <img src="img/foto3.jpg.jpeg" style="width:100%; height: 250px; object-fit: cover; border-radius:18px;">
+  </div>
+</section>
+
+<section id="sedes" class="reveal">
+  <h2>Nuestra Presencia en el Perú</h2>
+  <p class="subtitle-section">Contamos con presencia estratégica en las principales ciudades del país.</p>
+  <div class="sedes-grid">
+    <div class="sede-card"><img src="img/lima.jpg" alt="L"><div class="sede-info"><h3>Lima</h3><p>Centro operativo y gestión principal de comercio internacional.</p></div></div>
+    <div class="sede-card"><img src="img/chimbote.jpeg" alt="C"><div class="sede-info"><h3>Nuevo Chimbote</h3><p>Coordinación logística y operaciones estratégicas.</p></div></div>
+    <div class="sede-card"><img src="img/huaraz.jpeg" alt="H"><div class="sede-info"><h3>Huaraz</h3><p>Atención personalizada y expansión regional.</p></div></div>
+  </div>
+  <div class="cobertura"><p>Operamos y brindamos servicio en todo el territorio nacional 🇵🇪</p></div>
+</section>
+
+<section id="contacto" class="reveal">
+  <div style="max-width:500px; margin:auto; background:white; padding:40px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+    <h2 style="margin-bottom:20px;">Solicita tu Cotización</h2>
+    <form id="contact-form">
+      <input type="text" name="from_name" placeholder="Nombre completo" required style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;">
+      <input type="email" name="reply_to" placeholder="Correo electrónico" required style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;">
+      <textarea name="message" placeholder="Describe tu requerimiento" rows="4" style="width:100%; padding:15px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;"></textarea>
+      <button type="submit" class="btn-contacto" style="width:100%;">Solicitar Cotización</button>
+    </form>
+  </div>
+</section>
+
+<footer style="background:#0b3c6d; color:white; text-align:center; padding:30px;">
+  <p>© 2026 VILLARROCA GLOBAL TRADE</p>
+</footer>
+
+<a href="https://wa.me/51941988022" class="whatsapp-float" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  (function(){ emailjs.init("O4Gzhv4ptzXFa8-HD"); })();
+
+  const misProductos = [
+    { n: "PowerVolt R3 – Scooter Eléctrico Deportivo", d: "El PowerVolt R3 es un scooter eléctrico de estilo robusto y deportivo, diseñado para uso urbano con mayor estabilidad y resistencia. Ideal para quienes buscan potencia, diseño llamativo y practicidad.", p: "S/ 2999.00", e: "png" },
+    { n: "UrbanVolt S2 – Scooter Eléctrico", d: "El UrbanVolt S2 es un scooter eléctrico compacto y moderno, ideal para desplazamientos diarios en la ciudad. Ofrece manejo suave, bajo costo de uso y diseño minimalista.", p: "S/ 2200.00", e: "png" },
+    { n: "VoltRide X1 – Scooter Eléctrico Urbano", d: "El VoltRide X1 es un scooter eléctrico moderno y eficiente, ideal para la movilidad urbana. Ofrece conducción silenciosa, bajo consumo energético y diseño deportivo.", p: "S/ 1650.00", e: "png" }
+  ];
+
+  const tiendaGrid = document.getElementById('contenedor-tienda');
+  for(let i = 1; i <= 20; i++){
+    const info = misProductos[i-1] || { n: "Producto Importado " + i, d: "Producto gestionado por Villarroca.", p: "S/ " + (i * 50), e: "png" };
+    const ext = info.e || "png";
+    const img = "img/p" + i + "." + ext;
+    
+    tiendaGrid.innerHTML += `
+      <div class="producto-card" onclick="verDetalle('${info.n}', '${info.d}', '${info.p}', '${img}')">
+        <img src="${img}" alt="P${i}" onerror="this.src='img/logo.png'">
+        <h3>${info.n}</h3>
+        <span class="precio-tag">${info.p}</span>
+      </div>`;
+  }
+
+  function verDetalle(n, d, p, i) {
+    document.getElementById('modalTitle').innerText = n;
+    document.getElementById('modalDesc').innerText = d;
+    document.getElementById('modalPrice').innerText = p;
+    document.getElementById('modalImg').src = i;
+    document.getElementById('modalWaBtn').href = "https://wa.me/51941988022?text=Hola, me interesa el " + n;
+    document.getElementById('productModal').style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    document.getElementById('productModal').style.display = "none";
+    document.body.style.overflow = "auto";
+  }
+
+  const mobileMenu = document.getElementById('mobile-menu');
+  const navLinks = document.querySelector('.nav-links');
+  mobileMenu.addEventListener('click', () => navLinks.classList.toggle('active'));
+  document.querySelectorAll('.nav-links a').forEach(l => l.addEventListener('click', () => navLinks.classList.remove('active')));
+
+  window.addEventListener("scroll", function(){
+    const nav = document.getElementById("mainNav");
+    if(window.scrollY > 50) nav.classList.add("scrolled"); else nav.classList.remove("scrolled");
+    document.querySelectorAll(".reveal").forEach(el => {
+      if(el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active");
+    });
+  });
+
+  document.getElementById("contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    emailjs.sendForm("service_v97jroe", "template_8p688ue", this)
+      .then(() => { alert("¡Mensaje enviado correctamente! ✅"); this.reset(); }, (err) => alert("Error"));
+  });
+</script>
+</body>
+</html>
